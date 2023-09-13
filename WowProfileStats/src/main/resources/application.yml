@@ -1,0 +1,33 @@
+spring:
+  main:
+    web-application-type: servlet
+  security:
+    oauth2:
+      client:
+        registration:
+          blizzard:
+            client-id: ${WOW_CLIENT_ID}
+            client-secret: ${WOW_CLIENT_SECRET}
+            client-name: Battle.net OAuth Client
+            scope: openid,wow.profile
+        provider:
+          blizzard:
+            issuer-uri: https://oauth.battle.net
+  thymeleaf:
+    cache: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${WOW_MYSQL_USERNAME}
+    password: ${WOW_MYSQL_PASSWORD}
+    url: jdbc:mysql://localhost:3306/account-service?createDatabaseIfNotExist=true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+blizzard:
+  api:
+    host: https://eu.api.blizzard.com
+
+server:
+  port: 8080
