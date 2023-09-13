@@ -23,7 +23,6 @@ public class MyTests {
     private WebTestClient webTestClient;
     private final String characterName = "crimsmage";
     private final String realm = "draenor";
-    private final String accessToken = "EUZJRAGTEBrVbm48FqWdMdwfal4nW3coQy";
 
     @Value("${blizzard.api.host}")
     private String host;
