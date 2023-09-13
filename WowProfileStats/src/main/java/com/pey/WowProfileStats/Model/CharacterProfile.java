@@ -6,7 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 
 @Entity
@@ -66,6 +71,10 @@ public class CharacterProfile {
 
     @JsonProperty("equipped_item_level")
     private double equippedItemLevel;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp
+    private Date lastUpdated;
 
     public void setGender(Map<String, Object> gender) {
         this.gender = (String) gender.get("name");
