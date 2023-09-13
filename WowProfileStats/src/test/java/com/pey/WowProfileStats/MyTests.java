@@ -44,7 +44,7 @@ public class MyTests {
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON);
-         */
+
         WebTestClient.bindToController(controller)
                 .build()
                 .get()
@@ -52,6 +52,7 @@ public class MyTests {
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON);
-    }
+         */
 
+    }
 }
