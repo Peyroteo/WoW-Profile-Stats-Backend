@@ -27,8 +27,6 @@ public class AuthorizedController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
-
     @GetMapping("")
     public String stats(){
         return "authorized";
@@ -45,6 +43,8 @@ public class AuthorizedController {
     public OAuth2AuthorizedClient test2(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient oAuth2AuthorizedClient){
         return oAuth2AuthorizedClient;
     }
+
+
 
 
 }

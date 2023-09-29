@@ -76,6 +76,8 @@ public class CharacterProfile {
     @UpdateTimestamp
     private Date lastUpdated;
 
+    private int vaultWeekly;
+
     public void setGender(Map<String, Object> gender) {
         this.gender = (String) gender.get("name");
     }
@@ -90,6 +92,10 @@ public class CharacterProfile {
 
     public void setCharacter_class(Map<String, Object> character_class) {
         this.character_class = (String) character_class.get("name");
+    }
+
+    public void setCharacter_class2(String character_class) {
+        this.character_class = character_class;
     }
 
     public void setActive_spec(Map<String, Object> active_spec) {

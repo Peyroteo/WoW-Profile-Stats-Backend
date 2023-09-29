@@ -26,7 +26,7 @@ public class WelcomeController {
     }
 
     @RequestMapping(value ="/searchCharacter/{realm}/{characterName}", method = RequestMethod.GET)
-    public ResponseEntity<String> searchCharacter(@PathVariable String realm, @PathVariable String characterName) throws JsonProcessingException {
+    public ResponseEntity<String> searchCharacter(@PathVariable String realm, @PathVariable String characterName) throws Exception {
         return ResponseEntity.ok(wowService.getCharacterProfileSummary(realm, characterName));
     }
 
