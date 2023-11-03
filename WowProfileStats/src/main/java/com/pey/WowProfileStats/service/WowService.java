@@ -87,7 +87,7 @@ public class WowService {
                 .block();
 
         CharacterProfile character = objectMapper.readValue(temp, CharacterProfile.class);
-        character.setVaultWeekly(getVaultsWeekly(realm, characterName));
+        character.setVaultWeekly(getVaultsPreviousWeekly(realm, characterName));
         characterProfileRepository.save(character);
 
         return temp;
@@ -102,34 +102,34 @@ public class WowService {
                     .block();
 
             CharacterProfile character = objectMapper.readValue(temp, CharacterProfile.class);
-            character.setVaultWeekly(getVaultsWeekly(realm, characterName));
+            character.setVaultWeekly(getVaultsPreviousWeekly(realm, characterName));
             return character;
         } catch (Exception e) {
             throw new Exception("error", e);
         }
     }
 
-    public int getVaultsWeekly(String realm, String characterName) throws Exception {
+    public int getVaultsPreviousWeekly(String realm, String characterName) throws Exception {
         try {
             String temp = wowProfileWebClientRaider.get()
-                    .uri("https://raider.io/api/v1/characters/profile?region=eu&realm={realm}&name={characterName}&fields=mythic_plus_weekly_highest_level_runs", realm.toLowerCase(), characterName.toLowerCase())
+                    .uri("https://raider.io/api/v1/characters/profile?region=eu&realm={realm}&name={characterName}&fields=mythic_plus_previous_weekly_highest_level_runs", realm.toLowerCase(), characterName.toLowerCase())
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
 
             JsonNode rootNode = objectMapper.readTree(temp);
             int weeklyVaults = 0;
-            weeklyVaults = rootNode.path("mythic_plus_weekly_highest_level_runs").size();
+            weeklyVaults = rootNode.path("mythic_plus_previous_weekly_highest_level_runs").size();
             return weeklyVaults;
         } catch (Exception e) {
             throw new Exception("error", e);
         }
     }
 
-    public String getAllCharactersFromGuild(String guildName) throws Exception {
+    public String getAllCharactersFromGuild(String realmName, String guildName) throws Exception {
         try {
             String temp = wowProfileWebClient.get()
-                    .uri("/data/wow/guild/{guildName}/guild-slug/roster?namespace={namespace}&locale={locale}", guildName.toLowerCase(), namespace, locale)
+                    .uri("/data/wow/guild/{realmName}/{guildName}/roster?namespace={namespace}&locale={locale}", realmName.toLowerCase(), guildName.toLowerCase(), namespace, locale)
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
@@ -138,27 +138,31 @@ public class WowService {
 
             JsonNode rootNode = objectMapper.readTree(temp);
             for(int i = 0; i<rootNode.path("members").size(); i++){
+                int characterId = rootNode.path("members").path(i).path("character").path("id").asInt();
                 String characterName = rootNode.path("members").path(i).path("character").path("name").asText();
                 String characterLvl = rootNode.path("members").path(i).path("character").path("level").asText();
-                String characterClass = CharacterClass.values()[Integer.parseInt(rootNode.path("members").path(i).path("character").path("playable_class").path("id").asText())].name();
+                String characterClass = CharacterClass.values()[Integer.parseInt(rootNode.path("members").path(i).path("character").path("playable_class").path("id").asText())-1].name();
 
                 CharacterProfile characterTemp = new CharacterProfile();
+                if(Integer.parseInt(characterLvl) == 70) {
+                    characterTemp.setVaultWeekly(getVaultsPreviousWeekly(realmName, characterName));
+                }
+                characterTemp.setCharacterId(characterId);
                 characterTemp.setName(characterName);
                 characterTemp.setLevel(characterLvl);
                 characterTemp.setCharacter_class2(characterClass);
                 characterProfileRepository.save(characterTemp);
-
                 result = "{\"CharacterName\": " + characterName + " \"LvL\": " + characterLvl + "\"Class\": " + characterClass + "}";
+                System.out.println(result);
             }
-
-            return result;
+            return "done";
         } catch (Exception e) {
             throw new Exception("error", e);
         }
     }
 
     public void addCharacterToRaidTeam(CharacterProfile characterProfile){
-        
+
     }
 
 }

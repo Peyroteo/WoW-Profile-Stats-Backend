@@ -30,4 +30,9 @@ public class WelcomeController {
         return ResponseEntity.ok(wowService.getCharacterProfileSummary(realm, characterName));
     }
 
+    @RequestMapping(value ="/getAllCharactersFromGuild/{realm}/{guildName}", method = RequestMethod.GET)
+    public ResponseEntity<String> searchGuildGetAllCharacters(@PathVariable String realm, @PathVariable String guildName) throws Exception {
+        return ResponseEntity.ok(wowService.getAllCharactersFromGuild(realm, guildName));
+    }
+
 }
